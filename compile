@@ -37,7 +37,7 @@ git clone $TARGET $TEMP &&
 cd $TEMP &&
 composer install --no-dev &&
 cd - &&
-rsync -av --exclude=".*" $TEMP/ $DEST &&
+rsync -av --exclude ".*" --exclude "composer.*" --exclude "phpunit.*" $TEMP/ $DEST &&
 
 rm $TEMP -rf
 

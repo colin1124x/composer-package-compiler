@@ -1,0 +1,50 @@
+#!/bin/sh
+
+TARGET=${1}
+DEST=${2}
+
+error(){
+    echo "\033[31m${1}\033[m"
+    exit 1
+}
+
+success(){
+    echo "\033[32m${1}\033[m"
+}
+
+# TODO: 檢查git路徑
+
+if [ -z "$DEST" ] ; then
+    error "參數2 [$DEST] 不可為空"
+    exit 1
+fi
+
+if [ ! -d "$DEST" ] ; then
+
+    mkdir -p $DEST
+
+fi
+
+if [ -n "$(ls $DEST)" ] ; then
+
+    error "目的資料夾 [$DEST] 不為空"
+
+fi
+
+TEMP=$(mktemp -d)
+
+git clone $TARGET $TEMP &&
+cd $TEMP &&
+composer install --no-dev &&
+cd - &&
+rsync -av --exclude=".*" $TEMP/ $DEST &&
+cd ${DEST%/*} &&
+zip ${DEST}.zip ${DEST##/*/}/* &&
+cd - &&
+rm $DEST -rf
+
+rm $TEMP -rf
+
+
+success ok
+

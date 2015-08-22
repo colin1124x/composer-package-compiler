@@ -38,10 +38,6 @@ cd $TEMP &&
 composer install --no-dev &&
 cd - &&
 rsync -av --exclude=".*" $TEMP/ $DEST &&
-cd ${DEST%/*} &&
-zip -r ${DEST}.zip ${DEST##/*/}/ &&
-cd - &&
-rm $DEST -rf
 
 rm $TEMP -rf
 
